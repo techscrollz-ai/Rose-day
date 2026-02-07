@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Surprise for You</title>
+    <title>A Surprise for My Rose</title>
     <style>
         :root {
             --bg-color: #fff0f3;
@@ -12,138 +12,74 @@
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: var(--bg-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
-            text-align: center;
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; background-color: var(--bg-color);
+            font-family: 'Arial', sans-serif; overflow: hidden; text-align: center;
         }
 
-        /* Gift Box Styles */
-        .container {
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
+        .container { position: relative; cursor: pointer; z-index: 10; }
 
+        /* Gift Box */
         .gift-box {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            background-color: var(--box-color);
-            border-bottom-left-radius: 5px;
-            border-bottom-right-radius: 5px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            position: relative; width: 140px; height: 140px;
+            background-color: var(--box-color); border-radius: 0 0 5px 5px;
         }
-
-        .gift-box::before {
-            content: '';
-            position: absolute;
-            width: 30px;
-            height: 100%;
-            background-color: var(--ribbon-color);
-            left: 50%;
-            transform: translateX(-50%);
+        .gift-box::after {
+            content: ''; position: absolute; width: 25px; height: 100%;
+            background: var(--ribbon-color); left: 50%; transform: translateX(-50%);
         }
 
         .lid {
-            position: absolute;
-            width: 170px;
-            height: 40px;
-            background-color: var(--box-color);
-            top: -40px;
-            left: -10px;
-            z-index: 2;
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border-radius: 5px;
+            position: absolute; width: 160px; height: 35px;
+            background-color: var(--box-color); top: -35px; left: -10px;
+            z-index: 11; transition: all 0.7s ease; border-radius: 5px;
+        }
+        .lid::after {
+            content: ''; position: absolute; width: 25px; height: 100%;
+            background: var(--ribbon-color); left: 50%; transform: translateX(-50%);
         }
 
-        .lid::before {
-            content: '';
-            position: absolute;
-            width: 30px;
-            height: 100%;
-            background-color: var(--ribbon-color);
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        /* Bouquet Styles */
+        /* Bouquet */
         .bouquet {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) scale(0);
-            font-size: 80px;
-            transition: all 1s ease-out;
-            z-index: 1;
-            white-space: nowrap;
+            position: absolute; top: 10px; left: 50%;
+            transform: translateX(-50%) scale(0); font-size: 70px;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 5;
         }
 
-        /* Text and Quote */
+        /* Animations */
+        .container.open .lid { transform: translateY(-100px) rotate(-15deg); opacity: 0; }
+        .container.open .bouquet { transform: translateX(-50%) scale(1.5) translateY(-130px); }
+        .container.open .message { opacity: 1; transform: translateX(-50%) translateY(0); }
+
         .message {
-            position: absolute;
-            bottom: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 300px;
-            opacity: 0;
-            transition: all 1s ease;
+            position: absolute; bottom: -120px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            width: 280px; opacity: 0; transition: all 0.8s ease;
         }
+        .message h1 { color: var(--ribbon-color); margin: 0; font-size: 1.5rem; }
+        .message p { color: #590d22; font-style: italic; font-size: 1rem; }
 
-        .message h1 {
-            color: var(--ribbon-color);
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        .message p {
-            color: #590d22;
-            font-style: italic;
-            font-size: 1.1rem;
-        }
-
-        /* Animation States */
-        .container.open .lid {
-            transform: translateY(-120px) rotate(-15deg);
-            opacity: 0;
-        }
-
-        .container.open .bouquet {
-            transform: translateX(-50%) scale(1.2) translateY(-140px);
-        }
-
-        .container.open .message {
-            opacity: 1;
-            bottom: -180px;
-        }
-
-        /* Floating Petals */
+        /* Petals */
         .petal {
-            position: absolute;
-            background-color: #ff758f;
-            border-radius: 150% 0 150% 0;
-            opacity: 0.7;
-            pointer-events: none;
-            animation: drift linear infinite;
+            position: absolute; background: #ff758f; border-radius: 150% 0 150% 0;
+            animation: drift linear infinite; pointer-events: none;
+        }
+        @keyframes drift {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
 
-        @keyframes drift {
-            0% { transform: translateY(-10vh) rotate(0deg); }
-            100% { transform: translateY(110vh) rotate(360deg); }
-        }
-        
-        #player { display: none; }
+        #status { position: fixed; top: 10px; font-size: 12px; color: #ffb7c5; }
+        #player-container { position: absolute; visibility: hidden; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <div class="container" onclick="openGift()">
+    <div id="status">Loading your surprise...</div>
+
+    <div class="container" onclick="handleTap()">
         <div class="bouquet">🌹💐🌹</div>
         <div class="lid"></div>
         <div class="gift-box"></div>
@@ -153,50 +89,64 @@
         </div>
     </div>
 
-    <div id="player"></div>
+    <div id="player-container">
+        <div id="player"></div>
+    </div>
 
     <script>
         let opened = false;
+        let player;
 
-        // Load YouTube IFrame Player API
+        // Load YouTube API
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        var player;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                height: '0',
-                width: '0',
+                height: '1', width: '1',
                 videoId: 'a6cJAFFQn_I',
-                playerVars: {
-                    'autoplay': 0,
-                    'controls': 0
+                playerVars: { 
+                    'autoplay': 0, 
+                    'controls': 0, 
+                    'playsinline': 1 // Crucial for mobile
+                },
+                events: {
+                    'onReady': () => { document.getElementById('status').innerText = "Tap the box!"; }
                 }
             });
         }
 
-        function openGift() {
+        function handleTap() {
             if (!opened) {
+                // Animation
                 document.querySelector('.container').classList.add('open');
-                player.playVideo();
+                document.getElementById('status').style.display = 'none';
+                
+                // Audio - Try to play immediately on click
+                if (player && player.playVideo) {
+                    player.playVideo();
+                }
+
+                // Effects
                 createPetals();
                 opened = true;
             }
         }
 
         function createPetals() {
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < 25; i++) {
                 setTimeout(() => {
-                    const petal = document.createElement('div');
-                    petal.className = 'petal';
-                    petal.style.left = Math.random() * 100 + 'vw';
-                    petal.style.width = Math.random() * 15 + 10 + 'px';
-                    petal.style.height = petal.style.width;
-                    petal.style.animationDuration = Math.random() * 3 + 2 + 's';
-                    document.body.appendChild(petal);
-                }, i * 200);
+                    const p = document.createElement('div');
+                    p.className = 'petal';
+                    p.style.left = Math.random() * 100 + 'vw';
+                    const size = Math.random() * 15 + 10;
+                    p.style.width = size + 'px';
+                    p.style.height = size + 'px';
+                    p.style.animationDuration = Math.random() * 3 + 2 + 's';
+                    document.body.appendChild(p);
+                }, i * 150);
             }
         }
     </script>
