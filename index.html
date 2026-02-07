@@ -3,121 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>A Gift for You</title>
+    <title>For My Jaan ❤️</title>
     <style>
         :root {
-            --primary: #ff4d6d;
-            --secondary: #ffb3c1;
-            --text-main: #c9184a;
+            --primary: #d62828; /* Deep Red for Roses */
+            --secondary: #f77f00; /* Gold Ribbon */
+            --bg: #fff0f3;
         }
 
         * { box-sizing: border-box; }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden; 
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            overflow: hidden;
             background: radial-gradient(circle, #fff0f3 0%, #ffccd5 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
         }
 
-        .safe-zone {
+        .screen {
             position: relative;
             width: 100%;
-            height: 100%;
+            max-width: 400px;
+            height: 100dvh; /* Dynamic viewport height for mobile */
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; 
+            justify-content: flex-end; /* Keeps box at bottom */
             align-items: center;
-            padding-bottom: 12vh;
+            padding-bottom: 80px;
         }
 
-        /* REVEAL CONTENT */
+        /* POP UP CONTENT */
         .reveal-content {
             position: absolute;
-            bottom: 30%; 
-            width: 100%;
+            bottom: 35%; /* Mid-screen */
+            width: 90%;
             text-align: center;
             opacity: 0;
-            transform: scale(0.5) translateY(50px);
+            transform: scale(0.5) translateY(20px);
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s;
             z-index: 5;
-            pointer-events: none;
         }
 
-        .roses { font-size: clamp(70px, 20vw, 110px); display: block; margin-bottom: 10px; }
+        .roses { font-size: clamp(60px, 15vh, 90px); display: block; margin-bottom: 5px; }
         
         .main-wish {
             font-family: 'Brush Script MT', cursive;
-            font-size: clamp(32px, 10vw, 48px);
-            color: var(--text-main);
-            margin: 5px 0;
+            font-size: clamp(28px, 5vh, 40px);
+            color: #c9184a;
+            margin: 0;
         }
 
         .personal-note {
             background: rgba(255, 255, 255, 0.9);
-            padding: 15px;
-            border-radius: 15px;
-            font-size: clamp(14px, 4vw, 16px);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
             color: #444;
-            max-width: 280px;
-            margin: 10px auto;
-            border: 1px dashed var(--secondary);
+            margin-top: 10px;
+            border: 1px solid #ffb3c1;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        /* BOX */
+        /* GIFT BOX */
         .box-wrap {
             position: relative;
-            width: 150px;
-            height: 130px;
+            width: 140px;
+            height: 120px;
             cursor: pointer;
             z-index: 20;
         }
 
         .box-body {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             background-color: var(--primary);
             border-radius: 0 0 10px 10px;
             position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
         }
 
         .box-lid {
             position: absolute;
-            top: -30px;
-            left: -5%;
-            width: 110%;
-            height: 35px;
+            top: -25px; left: -5%;
+            width: 110%; height: 30px;
             background-color: var(--primary);
             border-radius: 5px;
             z-index: 30;
             transition: all 0.6s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
+        /* RIBBON */
         .box-body::after, .box-lid::after {
             content: "";
             position: absolute;
             background-color: var(--secondary);
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 100%;
+            left: 50%; transform: translateX(-50%);
+            width: 25px; height: 100%;
         }
 
-        /* ANIMATION STATES */
-        .open .box-lid { transform: translateY(-60px) rotate(-10deg); opacity: 0; }
-        .open .reveal-content { opacity: 1; transform: scale(1) translateY(-10px); }
+        /* OPENING ANIMATION */
+        .open .box-lid { transform: translateY(-100px) rotate(-15deg); opacity: 0; }
+        .open .reveal-content { opacity: 1; transform: scale(1) translateY(0); }
 
         .hint {
             position: absolute;
-            bottom: 30px;
-            color: var(--text-main);
+            bottom: 20px;
+            color: #c9184a;
             font-weight: bold;
             animation: pulse 1.5s infinite;
         }
@@ -133,39 +126,40 @@
 </head>
 <body>
 
-    <div id="music-container"></div>
+    <div id="player-container"></div>
 
-    <div class="safe-zone" id="mainZone">
+    <div class="screen" id="mainScreen">
         <div class="reveal-content">
             <span class="roses">💐🌹</span>
             <div class="main-wish">Happy Rose Day!</div>
             <div class="personal-note">
-                "Aap Humari Jaan Ban Gaye." <br>
-                Even miles apart, you are the only rose in my heart. ❤️
+                "Aap Humari Jaan Ban Gaye..." ❤️<br>
+                Distance is just a test to see how far love can travel.
             </div>
         </div>
 
-        <div class="box-wrap" onclick="openBox(this)">
+        <div class="box-wrap" onclick="openGift()">
             <div class="box-lid"></div>
             <div class="box-body"></div>
         </div>
 
-        <p class="hint">TAP TO OPEN SURPRISE 🎁</p>
+        <p class="hint" id="hint">TAP TO OPEN, JAAN 🎁</p>
     </div>
 
     <script>
-        function openBox(el) {
-            const zone = document.getElementById('mainZone');
-            if (zone.classList.contains('open')) return;
+        function openGift() {
+            const screen = document.getElementById('mainScreen');
+            if (screen.classList.contains('open')) return;
             
-            zone.classList.add('open');
-            document.querySelector('.hint').style.display = 'none';
+            screen.classList.add('open');
+            document.getElementById('hint').style.display = 'none';
 
-            // Trigger Music (Jaan Ban Gaye - Official Audio)
-            const musicHtml = '<iframe width="0" height="0" src="https://www.youtube.com/embed/Po_G9jiH0UQ?autoplay=1" frameborder="0" allow="autoplay"></iframe>';
-            document.getElementById('music-container').innerHTML = musicHtml;
+            // PLAY THE SONG (Jaan Ban Gaye)
+            // Using a YouTube embed that autoplays upon this click
+            const ytPlayer = document.getElementById('player-container');
+            ytPlayer.innerHTML = '<iframe width="0" height="0" src="https://www.youtube.com/embed/Po_G9jiH0UQ?autoplay=1&start=45" frameborder="0" allow="autoplay"></iframe>';
 
-            // Explosion
+            // HEART EXPLOSION
             for (let i = 0; i < 25; i++) {
                 createHeart();
             }
@@ -176,14 +170,17 @@
             heart.innerHTML = Math.random() > 0.5 ? '❤️' : '🌸';
             heart.className = 'heart';
             heart.style.left = '50%';
-            heart.style.top = '70%';
+            heart.style.top = '80%';
+            
             const x = (Math.random() - 0.5) * 400;
             const y = -1 * (Math.random() * 500);
+            
             heart.style.setProperty('--x', `${x}px`);
             heart.style.setProperty('--y', `${y}px`);
             heart.style.animation = `fly ${1 + Math.random()}s ease-out forwards`;
-            document.getElementById('mainZone').appendChild(heart);
-            setTimeout(() => heart.remove(), 2000);
+            
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 2500);
         }
     </script>
 </body>
