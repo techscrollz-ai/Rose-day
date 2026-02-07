@@ -10,7 +10,7 @@
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            overflow: hidden; /* Keeps everything in frame */
+            overflow: hidden;
             background: radial-gradient(circle, #ff4d6d 0%, #900c3f 100%);
             display: flex; justify-content: center; align-items: center;
             font-family: 'Arial', sans-serif;
@@ -22,9 +22,8 @@
             pointer-events: none; z-index: 1;
         }
 
-        /* Ready Indicator Style */
         #status-container {
-            position: absolute; top: 20%;
+            position: absolute; top: 15%;
             z-index: 20; text-align: center;
             width: 100%; transition: opacity 0.5s;
         }
@@ -55,7 +54,6 @@
             z-index: 10;
         }
 
-        /* Box & Lid Styling */
         .gift-box {
             position: relative; width: 150px; height: 130px;
             background: #b91d1d; border-radius: 0 0 8px 8px;
@@ -82,7 +80,6 @@
             left: 50%; transform: translateX(-50%);
         }
 
-        /* Bouquet Bloom */
         .bouquet {
             position: absolute; top: 0; left: 50%;
             transform: translateX(-50%) scale(0);
@@ -90,29 +87,34 @@
             z-index: 5; filter: drop-shadow(0 0 15px #ffd700);
         }
 
-        /* Message */
+        /* TEXT MOVED DOWN HERE */
         .message {
-            position: absolute; top: -220px; left: 50%;
-            transform: translateX(-50%); width: 320px;
-            opacity: 0; transition: all 1.5s ease;
-            text-align: center; pointer-events: none;
+            position: absolute; 
+            top: 150px; /* Positioned below the gift box */
+            left: 50%;
+            transform: translateX(-50%) translateY(20px); 
+            width: 320px;
+            opacity: 0; 
+            transition: all 1.5s ease;
+            text-align: center; 
+            pointer-events: none;
         }
 
         .message h1 {
             font-family: 'Great Vibes', cursive; color: #ffd700;
-            font-size: 3.5rem; margin: 0;
+            font-size: 3.2rem; margin: 0;
             text-shadow: 0 0 10px rgba(255,215,0,0.8);
         }
 
         .message p {
             color: #fff; font-size: 1rem; font-style: italic;
-            margin-top: 10px; text-shadow: 1px 1px 3px #000;
+            margin-top: 5px; text-shadow: 1px 1px 3px #000;
         }
 
         /* Open States */
         .open .lid { transform: translateY(-160px) rotate(-15deg); opacity: 0; }
         .open .bouquet { transform: translateX(-50%) scale(1.4) translateY(-140px); }
-        .open .message { opacity: 1; transform: translateX(-50%) translateY(-60px); }
+        .open .message { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         #player { display: none; }
     </style>
@@ -141,7 +143,6 @@
         let isOpened = false;
         let ytPlayer;
 
-        // Load YouTube API
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -164,17 +165,12 @@
             if (!isOpened) {
                 document.getElementById('surpriseContainer').classList.add('open');
                 document.getElementById('status-container').style.opacity = '0';
-                
-                if (ytPlayer && ytPlayer.playVideo) {
-                    ytPlayer.playVideo();
-                }
-
+                if (ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo();
                 startGoldenRain();
                 isOpened = true;
             }
         }
 
-        // Particle System
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         let goldParticles = [];
@@ -209,7 +205,6 @@
             requestAnimationFrame(animateGlitter);
         }
 
-        // Handle window resizing to keep it in frame
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
