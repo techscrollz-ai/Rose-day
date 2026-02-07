@@ -2,132 +2,143 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Grand Surprise for My Love</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>A Special Surprise</title>
     <style>
         :root {
             --primary: #ff4d6d;
             --secondary: #ffb3c1;
-            --note-bg: rgba(255, 255, 255, 0.9);
             --text-main: #c9184a;
         }
 
-        body {
+        /* Prevent scrolling and keep everything centered */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             background: radial-gradient(circle, #fff0f3 0%, #ffccd5 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
             font-family: 'Georgia', serif;
         }
 
-        .celebration-container {
+        .viewport {
             position: relative;
-            width: 320px;
-            height: 400px;
-            cursor: pointer;
-            perspective: 1000px;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
-        /* BOX STYLING */
-        .box-body {
-            position: absolute;
-            bottom: 50px;
+        /* THE GIFT BOX */
+        .box-container {
+            position: relative;
             width: 160px;
             height: 140px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .box-body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
             background-color: var(--primary);
             border-radius: 0 0 10px 10px;
-            z-index: 10;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
         .box-lid {
             position: absolute;
-            bottom: 190px;
+            top: -30px;
+            left: -10px;
             width: 180px;
             height: 40px;
             background-color: var(--primary);
             border-radius: 5px;
             z-index: 20;
             transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
         }
 
+        /* RIBBON */
         .box-body::after, .box-lid::after {
             content: "";
             position: absolute;
             background-color: var(--secondary);
             left: 50%;
             transform: translateX(-50%);
-            width: 35px;
+            width: 30px;
             height: 100%;
         }
 
-        /* POP-OUT CONTENT */
+        /* HIDDEN CONTENT (Pops UP) */
         .reveal-content {
             position: absolute;
-            top: 40%;
-            transform: translateY(0) scale(0);
-            text-align: center;
+            width: 100%;
+            bottom: 50%; /* Starts inside the box */
+            left: 0;
             opacity: 0;
-            z-index: 50;
-            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s;
+            transform: scale(0);
+            z-index: 5; /* Behind lid until opened */
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s;
+            pointer-events: none;
         }
 
-        .roses { font-size: 110px; display: block; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
+        .roses { font-size: 80px; display: block; }
         
         .main-wish {
             font-family: 'Brush Script MT', cursive;
-            font-size: 42px;
+            font-size: 32px;
             color: var(--text-main);
             margin: 10px 0;
-            white-space: nowrap;
         }
 
-        /* PERSONAL NOTE */
         .personal-note {
-            background: var(--note-bg);
-            padding: 15px;
-            border-radius: 15px;
-            font-size: 16px;
-            color: #555;
-            max-width: 250px;
-            line-height: 1.4;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 1.2s ease-out 1.2s; /* Fades in after the roses */
-            border: 1px dashed var(--secondary);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #444;
+            margin: 0 20px;
+            border: 1px solid var(--secondary);
         }
 
-        /* ANIMATION STATES */
-        .open .box-lid { transform: translate(150%, -400%) rotate(45deg); opacity: 0; }
-        .open .reveal-content { opacity: 1; transform: translateY(-110%) scale(1.1); }
-        .open .personal-note { opacity: 1; transform: translateY(-10px); }
+        /* OPEN STATE */
+        .open .box-lid {
+            transform: translateY(-80px) rotate(10deg);
+            opacity: 0;
+        }
+
+        .open .reveal-content {
+            opacity: 1;
+            transform: translateY(-80px) scale(1);
+            z-index: 50; /* Bring to front once opened */
+        }
 
         /* DECORATIONS */
-        .heart, .petal {
+        .decoration {
             position: absolute;
-            opacity: 0;
             pointer-events: none;
             z-index: 60;
         }
 
-        @keyframes float {
-            0% { transform: translateY(0) scale(0); opacity: 1; }
-            100% { transform: translateY(-500px) translateX(var(--x)) rotate(360deg); opacity: 0; }
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0); opacity: 1; }
+            100% { transform: translateY(-300px) rotate(360deg); opacity: 0; }
         }
 
         .hint {
-            position: absolute;
-            bottom: -20px;
+            margin-top: 40px;
             color: var(--text-main);
-            font-style: italic;
+            font-size: 16px;
             animation: pulse 1.5s infinite;
         }
 
@@ -140,52 +151,52 @@
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="celebration-container" onclick="openBox(this)">
-        <div class="reveal-content">
-            <span class="roses">💐🌹</span>
-            <div class="main-wish">Happy Rose Day, Beautiful!</div>
+    <div class="viewport">
+        <div class="box-container" id="giftBox" onclick="openBox()">
             
-            <div class="personal-note">
-                Even though we are miles apart, my love for you grows like a rose every single day. You're the most beautiful flower in my garden. ❤️
+            <div class="reveal-content" id="reveal">
+                <span class="roses">💐🌹</span>
+                <div class="main-wish">Happy Rose Day!</div>
+                <div class="personal-note">
+                    You're the most beautiful rose in my life. I'm so lucky to have you! ❤️
+                </div>
             </div>
+
+            <div class="box-lid"></div>
+            <div class="box-body"></div>
         </div>
 
-        <div class="box-lid"></div>
-        <div class="box-body"></div>
-        
-        <p class="hint">Click to open your surprise...</p>
+        <p class="hint" id="hintText">Tap to open your gift 🎁</p>
     </div>
 
     <script>
-        function openBox(container) {
+        function openBox() {
+            const container = document.getElementById('giftBox');
             if (container.classList.contains('open')) return;
             
             container.classList.add('open');
-            document.querySelector('.hint').style.display = 'none';
+            document.getElementById('hintText').style.display = 'none';
 
-            // Start Music
+            // Music
             const music = document.getElementById('bgMusic');
-            music.play().catch(e => console.log("Audio play blocked until interaction"));
+            music.play().catch(e => console.log("Click required for audio"));
 
-            // Explosion of hearts and petals
-            for (let i = 0; i < 30; i++) {
-                createDecoration(container, i % 2 === 0 ? '❤️' : '🌸');
+            // Floaties
+            for (let i = 0; i < 25; i++) {
+                setTimeout(createFloatie, i * 50);
             }
         }
 
-        function createDecoration(container, symbol) {
+        function createFloatie() {
             const el = document.createElement('div');
-            el.innerHTML = symbol;
-            el.className = symbol === '❤️' ? 'heart' : 'petal';
-            el.style.setProperty('--x', (Math.random() * 400 - 200) + 'px');
-            el.style.left = '50%';
+            el.innerHTML = Math.random() > 0.5 ? '❤️' : '🌸';
+            el.className = 'decoration';
+            el.style.left = Math.random() * 100 + '%';
             el.style.top = '60%';
-            el.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            el.style.animation = `float ${Math.random() * 2 + 2}s ease-out forwards`;
-            el.style.animationDelay = (Math.random() * 0.8) + 's';
-            container.appendChild(el);
-            
-            setTimeout(() => el.remove(), 4000);
+            el.style.fontSize = Math.random() * 20 + 10 + 'px';
+            el.style.animation = `floatUp ${Math.random() * 2 + 2}s linear forwards`;
+            document.querySelector('.viewport').appendChild(el);
+            setTimeout(() => el.remove(), 3000);
         }
     </script>
 </body>
