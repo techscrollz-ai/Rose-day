@@ -2,99 +2,117 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For My Only Rose</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>A Gift for You</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
-        :root {
-            --bg-deep: #900c3f;
-            --pink-glow: #ff4d6d;
-            --gold: #ffd700;
-        }
-
-        body {
+        body, html {
             margin: 0; padding: 0;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh;
-            background: radial-gradient(circle, #ff4d6d 0%, #900c3f 100%);
-            font-family: 'Great Vibes', cursive;
-            overflow: hidden;
-            text-align: center;
-        }
-
-        /* Video Background Particles Effect */
-        #canvas {
-            position: absolute;
-            top: 0; left: 0;
             width: 100%; height: 100%;
-            pointer-events: none;
+            overflow: hidden; /* Keeps everything in frame */
+            background: radial-gradient(circle, #ff4d6d 0%, #900c3f 100%);
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Arial', sans-serif;
         }
 
-        .container { position: relative; cursor: pointer; z-index: 10; transition: transform 0.3s; }
-        .container:active { transform: scale(0.95); }
+        #canvas {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
+        }
 
-        /* Cinematic Gift Box */
+        /* Ready Indicator Style */
+        #status-container {
+            position: absolute; top: 20%;
+            z-index: 20; text-align: center;
+            width: 100%; transition: opacity 0.5s;
+        }
+
+        .ready-badge {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 10px #ffd700;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        .main-frame {
+            position: relative;
+            display: flex; flex-direction: column; align-items: center;
+            z-index: 10;
+        }
+
+        /* Box & Lid Styling */
         .gift-box {
-            position: relative; width: 160px; height: 140px;
-            background: #b91d1d;
-            border-radius: 0 0 8px 8px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            position: relative; width: 150px; height: 130px;
+            background: #b91d1d; border-radius: 0 0 8px 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            cursor: pointer;
         }
-        .gift-box::after { /* Gold Ribbon */
-            content: ''; position: absolute; width: 35px; height: 100%;
+
+        .gift-box::after {
+            content: ''; position: absolute; width: 30px; height: 100%;
             background: linear-gradient(to bottom, #ffd700, #b8860b);
             left: 50%; transform: translateX(-50%);
         }
 
         .lid {
-            position: absolute; width: 180px; height: 40px;
-            background: #b91d1d; top: -40px; left: -10px;
+            position: absolute; width: 170px; height: 35px;
+            background: #b91d1d; top: -35px; left: -10px;
             z-index: 11; transition: all 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-radius: 4px; pointer-events: none;
         }
-        .lid::after { /* Lid Ribbon */
-            content: ''; position: absolute; width: 35px; height: 100%;
+
+        .lid::after {
+            content: ''; position: absolute; width: 30px; height: 100%;
             background: linear-gradient(to right, #ffd700, #b8860b);
             left: 50%; transform: translateX(-50%);
         }
 
-        /* The Bouquet (Video Style) */
+        /* Bouquet Bloom */
         .bouquet {
             position: absolute; top: 0; left: 50%;
             transform: translateX(-50%) scale(0);
-            font-size: 90px;
-            transition: all 1.2s ease-out;
-            z-index: 5;
-            filter: drop-shadow(0 0 15px gold);
+            font-size: 80px; transition: all 1.2s ease-out;
+            z-index: 5; filter: drop-shadow(0 0 15px #ffd700);
         }
 
-        /* Glowing Text */
+        /* Message */
         .message {
             position: absolute; top: -220px; left: 50%;
-            transform: translateX(-50%);
-            width: 350px; opacity: 0; transition: all 1.5s ease;
-        }
-        .message h1 {
-            color: var(--gold);
-            font-size: 4rem;
-            margin: 0;
-            text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
-        }
-        .message p {
-            color: #fff;
-            font-family: 'Arial', sans-serif;
-            font-style: italic;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            transform: translateX(-50%); width: 320px;
+            opacity: 0; transition: all 1.5s ease;
+            text-align: center; pointer-events: none;
         }
 
-        /* Interaction State */
-        .container.open .lid { transform: translateY(-150px) rotate(-20deg); opacity: 0; }
-        .container.open .bouquet { transform: translateX(-50%) scale(1.3) translateY(-160px); }
-        .container.open .message { opacity: 1; top: -300px; }
+        .message h1 {
+            font-family: 'Great Vibes', cursive; color: #ffd700;
+            font-size: 3.5rem; margin: 0;
+            text-shadow: 0 0 10px rgba(255,215,0,0.8);
+        }
+
+        .message p {
+            color: #fff; font-size: 1rem; font-style: italic;
+            margin-top: 10px; text-shadow: 1px 1px 3px #000;
+        }
+
+        /* Open States */
+        .open .lid { transform: translateY(-160px) rotate(-15deg); opacity: 0; }
+        .open .bouquet { transform: translateX(-50%) scale(1.4) translateY(-140px); }
+        .open .message { opacity: 1; transform: translateX(-50%) translateY(-60px); }
 
         #player { display: none; }
     </style>
@@ -103,7 +121,11 @@
 
     <canvas id="canvas"></canvas>
 
-    <div class="container" onclick="openSurprise()">
+    <div id="status-container">
+        <div id="status" class="ready-badge">Loading...</div>
+    </div>
+
+    <div class="main-frame" id="surpriseContainer" onclick="openBox()">
         <div class="bouquet">💐</div>
         <div class="lid"></div>
         <div class="gift-box"></div>
@@ -116,64 +138,82 @@
     <div id="player"></div>
 
     <script>
-        let opened = false;
-        let player;
+        let isOpened = false;
+        let ytPlayer;
 
-        // YouTube API for "Jaan Ban Gaye"
+        // Load YouTube API
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
+            ytPlayer = new YT.Player('player', {
                 height: '0', width: '0',
                 videoId: 'a6cJAFFQn_I',
-                playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 }
+                playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 },
+                events: {
+                    'onReady': () => { 
+                        document.getElementById('status').innerText = "Tap the Surprise"; 
+                    }
+                }
             });
         }
 
-        function openSurprise() {
-            if (!opened) {
-                document.querySelector('.container').classList.add('open');
-                if (player && player.playVideo) player.playVideo();
-                startGlitter();
-                opened = true;
+        function openBox() {
+            if (!isOpened) {
+                document.getElementById('surpriseContainer').classList.add('open');
+                document.getElementById('status-container').style.opacity = '0';
+                
+                if (ytPlayer && ytPlayer.playVideo) {
+                    ytPlayer.playVideo();
+                }
+
+                startGoldenRain();
+                isOpened = true;
             }
         }
 
-        // Golden Glitter Background Effect
+        // Particle System
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        let particles = [];
+        let goldParticles = [];
 
-        function startGlitter() {
+        function startGoldenRain() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            for(let i = 0; i < 100; i++) {
-                particles.push({
+            for(let i = 0; i < 120; i++) {
+                goldParticles.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    size: Math.random() * 3 + 1,
-                    speed: Math.random() * 2 + 0.5,
-                    opacity: Math.random()
+                    size: Math.random() * 2 + 1,
+                    speed: Math.random() * 3 + 1,
+                    velX: (Math.random() - 0.5) * 1,
+                    o: Math.random()
                 });
             }
-            animate();
+            animateGlitter();
         }
 
-        function animate() {
+        function animateGlitter() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                ctx.fillStyle = `rgba(255, 215, 0, ${p.opacity})`;
+            goldParticles.forEach(p => {
+                ctx.fillStyle = `rgba(255, 215, 0, ${p.o})`;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fill();
                 p.y += p.speed;
+                p.x += p.velX;
                 if (p.y > canvas.height) p.y = -10;
             });
-            requestAnimationFrame(animate);
+            requestAnimationFrame(animateGlitter);
         }
+
+        // Handle window resizing to keep it in frame
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
     </script>
 </body>
 </html>
