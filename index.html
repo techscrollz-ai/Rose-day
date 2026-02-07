@@ -3,137 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Surprise for You</title>
+    <title>A Grand Surprise for My Love</title>
     <style>
         :root {
-            --bg-color: #fff0f3;
-            --box-color: #ff4d6d;
-            --ribbon-color: #ffb3c1;
-            --text-color: #c9184a;
+            --primary: #ff4d6d;
+            --secondary: #ffb3c1;
+            --note-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #c9184a;
         }
 
         body {
-            background-color: var(--bg-color);
+            background: radial-gradient(circle, #fff0f3 0%, #ffccd5 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Georgia', serif;
         }
 
-        .container {
+        .celebration-container {
             position: relative;
+            width: 320px;
+            height: 400px;
             cursor: pointer;
-            text-align: center;
+            perspective: 1000px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* The Gift Box */
+        /* BOX STYLING */
         .box-body {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            background-color: var(--box-color);
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            z-index: 2;
+            position: absolute;
+            bottom: 50px;
+            width: 160px;
+            height: 140px;
+            background-color: var(--primary);
+            border-radius: 0 0 10px 10px;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
-        /* The Lid */
         .box-lid {
             position: absolute;
-            width: 220px;
-            height: 50px;
-            background-color: var(--box-color);
-            left: -10px;
-            top: -50px;
+            bottom: 190px;
+            width: 180px;
+            height: 40px;
+            background-color: var(--primary);
             border-radius: 5px;
-            z-index: 3;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 20;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
 
-        /* Ribbon Styles */
         .box-body::after, .box-lid::after {
             content: "";
             position: absolute;
-            background-color: var(--ribbon-color);
+            background-color: var(--secondary);
             left: 50%;
             transform: translateX(-50%);
-            width: 40px;
+            width: 35px;
             height: 100%;
         }
 
-        /* The Bouquet */
-        .bouquet {
+        /* POP-OUT CONTENT */
+        .reveal-content {
             position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 80px;
+            top: 40%;
+            transform: translateY(0) scale(0);
+            text-align: center;
             opacity: 0;
-            z-index: 1;
-            transition: all 1s ease-out;
+            z-index: 50;
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s;
         }
 
-        /* The Message */
-        .message {
+        .roses { font-size: 110px; display: block; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
+        
+        .main-wish {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 42px;
+            color: var(--text-main);
+            margin: 10px 0;
+            white-space: nowrap;
+        }
+
+        /* PERSONAL NOTE */
+        .personal-note {
+            background: var(--note-bg);
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 16px;
+            color: #555;
+            max-width: 250px;
+            line-height: 1.4;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1.2s ease-out 1.2s; /* Fades in after the roses */
+            border: 1px dashed var(--secondary);
+        }
+
+        /* ANIMATION STATES */
+        .open .box-lid { transform: translate(150%, -400%) rotate(45deg); opacity: 0; }
+        .open .reveal-content { opacity: 1; transform: translateY(-110%) scale(1.1); }
+        .open .personal-note { opacity: 1; transform: translateY(-10px); }
+
+        /* DECORATIONS */
+        .heart, .petal {
             position: absolute;
-            top: -120px;
-            width: 100%;
-            left: 0;
-            color: var(--text-color);
-            font-size: 24px;
-            font-weight: bold;
             opacity: 0;
-            transition: all 1s ease-out 0.5s;
+            pointer-events: none;
+            z-index: 60;
         }
 
-        /* Animation Classes */
-        .open .box-lid {
-            transform: translateY(-150px) rotate(-15deg);
-        }
-
-        .open .bouquet {
-            opacity: 1;
-            transform: translateX(-50%) translateY(-180px) scale(1.5);
-        }
-
-        .open .message {
-            opacity: 1;
-            transform: translateY(-100px);
+        @keyframes float {
+            0% { transform: translateY(0) scale(0); opacity: 1; }
+            100% { transform: translateY(-500px) translateX(var(--x)) rotate(360deg); opacity: 0; }
         }
 
         .hint {
-            margin-top: 50px;
-            color: var(--text-color);
-            font-size: 14px;
-            letter-spacing: 1px;
+            position: absolute;
+            bottom: -20px;
+            color: var(--text-main);
+            font-style: italic;
             animation: pulse 1.5s infinite;
         }
 
-        @keyframes pulse {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="container" onclick="openBox()">
-        <div class="message">🌹 Happy Rose Day! 🌹</div>
-        <div class="bouquet">💐</div>
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="celebration-container" onclick="openBox(this)">
+        <div class="reveal-content">
+            <span class="roses">💐🌹</span>
+            <div class="main-wish">Happy Rose Day, Beautiful!</div>
+            
+            <div class="personal-note">
+                Even though we are miles apart, my love for you grows like a rose every single day. You're the most beautiful flower in my garden. ❤️
+            </div>
+        </div>
+
         <div class="box-lid"></div>
         <div class="box-body"></div>
-        <p class="hint">Tap to open</p>
+        
+        <p class="hint">Click to open your surprise...</p>
     </div>
 
     <script>
-        function openBox() {
-            document.querySelector('.container').classList.add('open');
+        function openBox(container) {
+            if (container.classList.contains('open')) return;
+            
+            container.classList.add('open');
             document.querySelector('.hint').style.display = 'none';
+
+            // Start Music
+            const music = document.getElementById('bgMusic');
+            music.play().catch(e => console.log("Audio play blocked until interaction"));
+
+            // Explosion of hearts and petals
+            for (let i = 0; i < 30; i++) {
+                createDecoration(container, i % 2 === 0 ? '❤️' : '🌸');
+            }
+        }
+
+        function createDecoration(container, symbol) {
+            const el = document.createElement('div');
+            el.innerHTML = symbol;
+            el.className = symbol === '❤️' ? 'heart' : 'petal';
+            el.style.setProperty('--x', (Math.random() * 400 - 200) + 'px');
+            el.style.left = '50%';
+            el.style.top = '60%';
+            el.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            el.style.animation = `float ${Math.random() * 2 + 2}s ease-out forwards`;
+            el.style.animationDelay = (Math.random() * 0.8) + 's';
+            container.appendChild(el);
+            
+            setTimeout(() => el.remove(), 4000);
         }
     </script>
 </body>
