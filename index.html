@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Surprise for You</title>
+    <style>
+        :root {
+            --bg-color: #fff0f3;
+            --box-color: #ff4d6d;
+            --ribbon-color: #ffb3c1;
+            --text-color: #c9184a;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            position: relative;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        /* The Gift Box */
+        .box-body {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            background-color: var(--box-color);
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 2;
+        }
+
+        /* The Lid */
+        .box-lid {
+            position: absolute;
+            width: 220px;
+            height: 50px;
+            background-color: var(--box-color);
+            left: -10px;
+            top: -50px;
+            border-radius: 5px;
+            z-index: 3;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Ribbon Styles */
+        .box-body::after, .box-lid::after {
+            content: "";
+            position: absolute;
+            background-color: var(--ribbon-color);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 100%;
+        }
+
+        /* The Bouquet */
+        .bouquet {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 80px;
+            opacity: 0;
+            z-index: 1;
+            transition: all 1s ease-out;
+        }
+
+        /* The Message */
+        .message {
+            position: absolute;
+            top: -120px;
+            width: 100%;
+            left: 0;
+            color: var(--text-color);
+            font-size: 24px;
+            font-weight: bold;
+            opacity: 0;
+            transition: all 1s ease-out 0.5s;
+        }
+
+        /* Animation Classes */
+        .open .box-lid {
+            transform: translateY(-150px) rotate(-15deg);
+        }
+
+        .open .bouquet {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-180px) scale(1.5);
+        }
+
+        .open .message {
+            opacity: 1;
+            transform: translateY(-100px);
+        }
+
+        .hint {
+            margin-top: 50px;
+            color: var(--text-color);
+            font-size: 14px;
+            letter-spacing: 1px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" onclick="openBox()">
+        <div class="message">🌹 Happy Rose Day! 🌹</div>
+        <div class="bouquet">💐</div>
+        <div class="box-lid"></div>
+        <div class="box-body"></div>
+        <p class="hint">Tap to open</p>
+    </div>
+
+    <script>
+        function openBox() {
+            document.querySelector('.container').classList.add('open');
+            document.querySelector('.hint').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
