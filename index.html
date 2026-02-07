@@ -18,30 +18,29 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Stops all scrolling */
+            overflow: hidden; 
             background: radial-gradient(circle, #fff0f3 0%, #ffccd5 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* The Main Container - Keeps everything inside the phone screen */
         .safe-zone {
             position: relative;
-            width: 90vw;
-            height: 90vh;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; /* Keeps the box toward the bottom */
+            justify-content: flex-end; 
             align-items: center;
-            padding-bottom: 10vh; /* Room for the box */
+            padding-bottom: 12vh;
         }
 
-        /* THE REVEAL CONTENT */
+        /* REVEAL CONTENT */
         .reveal-content {
             position: absolute;
-            bottom: 25%; /* Positions it above the box */
+            bottom: 30%; 
             width: 100%;
             text-align: center;
             opacity: 0;
@@ -51,22 +50,17 @@
             pointer-events: none;
         }
 
-        .roses { 
-            font-size: clamp(60px, 15vw, 100px); 
-            display: block; 
-            margin-bottom: 10px;
-        }
+        .roses { font-size: clamp(70px, 20vw, 110px); display: block; margin-bottom: 10px; }
         
         .main-wish {
             font-family: 'Brush Script MT', cursive;
-            font-size: clamp(28px, 8vw, 42px);
+            font-size: clamp(32px, 10vw, 48px);
             color: var(--text-main);
             margin: 5px 0;
-            line-height: 1.2;
         }
 
         .personal-note {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             padding: 15px;
             border-radius: 15px;
             font-size: clamp(14px, 4vw, 16px);
@@ -74,14 +68,14 @@
             max-width: 280px;
             margin: 10px auto;
             border: 1px dashed var(--secondary);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        /* THE BOX */
+        /* BOX */
         .box-wrap {
             position: relative;
-            width: 140px;
-            height: 120px;
+            width: 150px;
+            height: 130px;
             cursor: pointer;
             z-index: 20;
         }
@@ -92,60 +86,45 @@
             background-color: var(--primary);
             border-radius: 0 0 10px 10px;
             position: relative;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
         .box-lid {
             position: absolute;
-            top: -25px;
+            top: -30px;
             left: -5%;
             width: 110%;
-            height: 30px;
+            height: 35px;
             background-color: var(--primary);
             border-radius: 5px;
             z-index: 30;
             transition: all 0.6s ease;
         }
 
-        /* RIBBON */
         .box-body::after, .box-lid::after {
             content: "";
             position: absolute;
             background-color: var(--secondary);
             left: 50%;
             transform: translateX(-50%);
-            width: 25px;
+            width: 30px;
             height: 100%;
         }
 
-        /* ANIMATION TRiggers */
-        .open .box-lid {
-            transform: translateY(-50px) rotate(-10deg);
-            opacity: 0;
-        }
-
-        .open .reveal-content {
-            opacity: 1;
-            transform: scale(1) translateY(-20px);
-        }
+        /* ANIMATION STATES */
+        .open .box-lid { transform: translateY(-60px) rotate(-10deg); opacity: 0; }
+        .open .reveal-content { opacity: 1; transform: scale(1) translateY(-10px); }
 
         .hint {
             position: absolute;
-            bottom: 20px;
+            bottom: 30px;
             color: var(--text-main);
             font-weight: bold;
-            letter-spacing: 1px;
             animation: pulse 1.5s infinite;
         }
 
         @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
-        .heart {
-            position: absolute;
-            pointer-events: none;
-            z-index: 100;
-        }
-
+        .heart { position: absolute; pointer-events: none; z-index: 100; }
         @keyframes fly {
             0% { transform: translate(0, 0) scale(1); opacity: 1; }
             100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
@@ -154,16 +133,15 @@
 </head>
 <body>
 
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
+    <div id="music-container"></div>
 
     <div class="safe-zone" id="mainZone">
         <div class="reveal-content">
             <span class="roses">💐🌹</span>
             <div class="main-wish">Happy Rose Day!</div>
             <div class="personal-note">
-                Even though we're apart, you're the only rose in my heart. I love you! ❤️
+                "Aap Humari Jaan Ban Gaye." <br>
+                Even miles apart, you are the only rose in my heart. ❤️
             </div>
         </div>
 
@@ -172,7 +150,7 @@
             <div class="box-body"></div>
         </div>
 
-        <p class="hint">TAP THE GIFT BOX</p>
+        <p class="hint">TAP TO OPEN SURPRISE 🎁</p>
     </div>
 
     <script>
@@ -183,29 +161,27 @@
             zone.classList.add('open');
             document.querySelector('.hint').style.display = 'none';
 
-            // Audio
-            document.getElementById('bgMusic').play().catch(() => {});
+            // Trigger Music (Jaan Ban Gaye - Official Audio)
+            const musicHtml = '<iframe width="0" height="0" src="https://www.youtube.com/embed/Po_G9jiH0UQ?autoplay=1" frameborder="0" allow="autoplay"></iframe>';
+            document.getElementById('music-container').innerHTML = musicHtml;
 
-            // Hearts explosion
-            for (let i = 0; i < 20; i++) {
+            // Explosion
+            for (let i = 0; i < 25; i++) {
                 createHeart();
             }
         }
 
         function createHeart() {
             const heart = document.createElement('div');
-            heart.innerHTML = '❤️';
+            heart.innerHTML = Math.random() > 0.5 ? '❤️' : '🌸';
             heart.className = 'heart';
             heart.style.left = '50%';
             heart.style.top = '70%';
-            
-            const x = (Math.random() - 0.5) * 300;
-            const y = -1 * (Math.random() * 400);
-            
+            const x = (Math.random() - 0.5) * 400;
+            const y = -1 * (Math.random() * 500);
             heart.style.setProperty('--x', `${x}px`);
             heart.style.setProperty('--y', `${y}px`);
             heart.style.animation = `fly ${1 + Math.random()}s ease-out forwards`;
-            
             document.getElementById('mainZone').appendChild(heart);
             setTimeout(() => heart.remove(), 2000);
         }
